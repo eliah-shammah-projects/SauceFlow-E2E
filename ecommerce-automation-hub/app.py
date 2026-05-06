@@ -1,4 +1,6 @@
+import json
 import logging
+from datetime import datetime, timezone
 from flask import Flask, render_template
 from dotenv import load_dotenv
 from api.routes import api
@@ -12,7 +14,23 @@ app.register_blueprint(api)
 class _JsonFormatter(logging.Formatter):
     def format(self, record):
         try:
-            return record.getMessage()
+            ts = datetime.now(timezone.utc).isoformat()
+            msg = record.getMessage()
+            try:
+                payload = json.loads(msg)
+                if isinstance(payload, dict):
+                    payload.setdefault("ts", ts)
+                    payload.setdefault("level", record.levelname)
+                    payload.setdefault("logger", record.name)
+                    return json.dumps(payload, ensure_ascii=False)
+            except (json.JSONDecodeError, ValueError):
+                pass
+            return json.dumps({
+                "ts": ts,
+                "level": record.levelname,
+                "logger": record.name,
+                "msg": msg,
+            }, ensure_ascii=False)
         except Exception:
             return super().format(record)
 
@@ -43,4 +61,4 @@ def checkout_status():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, threaded=True)
+    app.run(debug=True, threaded=True, port=5002)

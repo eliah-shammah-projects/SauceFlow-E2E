@@ -5,6 +5,11 @@ from automation.browser_manager import open_browser, close_browser
 from automation.actions import click, fill, get_all_elements
 import automation.selectors as sel
 
+_SCREENSHOTS_DIR = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+    "static", "screenshots"
+)
+
 
 def purchase_product(product: Product) -> Order:
     browser, page = open_browser()
@@ -32,8 +37,9 @@ def purchase_product(product: Product) -> Order:
         click(page, sel.FINISH_BUTTON)
 
         filename = f"confirmation_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
+        abs_path = os.path.join(_SCREENSHOTS_DIR, filename)
+        page.screenshot(path=abs_path)
         screenshot_path = f"static/screenshots/{filename}"
-        page.screenshot(path=screenshot_path)
 
         return Order(
             items=[product],

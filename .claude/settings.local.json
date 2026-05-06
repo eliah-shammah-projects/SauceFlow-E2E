@@ -6,7 +6,10 @@
       "Bash(Sort-Object FullName)",
       "Bash(Format-Table -AutoSize)",
       "Bash(python app.py)",
-      "Bash(python -c \"from app import app; print\\('OK - app importado com sucesso'\\)\")"
+      "Bash(python -c \"from app import app; print\\('OK - app importado com sucesso'\\)\")",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)"
     ]
   }
 }
