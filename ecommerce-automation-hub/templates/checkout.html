@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SauceFlow — Confirmação</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <div class="container">
+    <div id="result-box"></div>
+  </div>
+
+  <script>
+    const resultBox = document.getElementById("result-box");
+    const raw = sessionStorage.getItem("orderResult");
+
+    // Se não há resultado salvo, volta ao início
+    if (!raw) {
+      window.location.href = "/";
+    } else {
+      const order = JSON.parse(raw);
+
+      // Limpa o sessionStorage para não exibir resultado antigo numa próxima visita
+      sessionStorage.removeItem("orderResult");
+
+      if (order.status === "success") {
+        const screenshotHtml = order.screenshot_path
+          ? `<img src="/${order.screenshot_path}" alt="Confirmação da compra" />`
+          : "";
+
+        resultBox.innerHTML = `
+          <div class="checkout-result success">
+            <h1>Compra realizada!</h1>
+            <p>Total pago: <strong>$${parseFloat(order.total).toFixed(2)}</strong></p>
+            <p>O robô finalizou o pedido com sucesso no SauceDemo.</p>
+            ${screenshotHtml}
+            <br/>
+            <a href="/" class="link-back">← Fazer nova busca</a>
+          </div>`;
+      } else {
+        const errorMsg = order.error || "Erro desconhecido durante o checkout.";
+
+        resultBox.innerHTML = `
+          <div class="checkout-result error">
+            <h1>Falha na compra</h1>
+            <p>${errorMsg}</p>
+            <a href="/" class="link-back">← Tentar novamente</a>
+          </div>`;
+      }
+    }
+  </script>
+</body>
+</html>

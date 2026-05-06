@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SauceFlow — Buscar Produto</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Buscar Produto</h1>
+
+    <div id="error-box" class="error-msg" style="display:none;"></div>
+
+    <form id="search-form">
+      <div class="form-group">
+        <label for="item">Nome do produto</label>
+        <input
+          type="text"
+          id="item"
+          name="item"
+          placeholder="ex: sauce labs backpack"
+          required
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="preco_max">Preço máximo (USD)</label>
+        <input
+          type="number"
+          id="preco_max"
+          name="preco_max"
+          placeholder="ex: 30"
+          min="0.01"
+          step="0.01"
+          required
+        />
+      </div>
+
+      <button type="submit" class="btn" id="submit-btn">Buscar</button>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById("search-form");
+    const submitBtn = document.getElementById("submit-btn");
+    const errorBox = document.getElementById("error-box");
+
+    // Exibe erro vindo de redirecionamento (ex: ?erro=mensagem)
+    const params = new URLSearchParams(window.location.search);
+    const erroParam = params.get("erro");
+    if (erroParam) {
+      errorBox.textContent = erroParam;
+      errorBox.style.display = "block";
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      errorBox.style.display = "none";
+
+      const item = document.getElementById("item").value.trim();
+      const preco_max = parseFloat(document.getElementById("preco_max").value);
+
+      if (!item) {
+        errorBox.textContent = "Por favor, informe o nome do produto.";
+        errorBox.style.display = "block";
+        return;
+      }
+
+      if (isNaN(preco_max) || preco_max <= 0) {
+        errorBox.textContent = "Por favor, informe um preço máximo válido.";
+        errorBox.style.display = "block";
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Buscando...";
+
+      try {
+        const response = await fetch("/run-search", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ item, preco_max }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Erro ao iniciar a busca.");
+        }
+
+        window.location.href = "/loading?id=" + encodeURIComponent(data.requestId);
+      } catch (err) {
+        errorBox.textContent = err.message;
+        errorBox.style.display = "block";
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Buscar";
+      }
+    });
+  </script>
+</body>
+</html>
