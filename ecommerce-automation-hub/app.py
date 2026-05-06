@@ -1,0 +1,46 @@
+import logging
+from flask import Flask, render_template
+from dotenv import load_dotenv
+from api.routes import api
+
+load_dotenv()
+
+app = Flask(__name__)
+app.register_blueprint(api)
+
+
+class _JsonFormatter(logging.Formatter):
+    def format(self, record):
+        try:
+            return record.getMessage()
+        except Exception:
+            return super().format(record)
+
+
+handler = logging.StreamHandler()
+handler.setFormatter(_JsonFormatter())
+logging.basicConfig(level=logging.INFO, handlers=[handler])
+
+
+@app.route("/")
+def index():
+    return render_template("index.html")
+
+
+@app.route("/loading")
+def loading():
+    return render_template("loading.html")
+
+
+@app.route("/resultados")
+def resultados():
+    return render_template("resultados.html")
+
+
+@app.route("/checkout-status")
+def checkout_status():
+    return render_template("checkout.html")
+
+
+if __name__ == "__main__":
+    app.run(debug=True, threaded=True)
