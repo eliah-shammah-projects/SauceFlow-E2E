@@ -88,6 +88,27 @@ Acesse `http://127.0.0.1:5002` no browser.
 - **Pós-fase 7:** traduzir toda a UI para inglês (templates + JS)
 - **Pós-fase 7:** melhorar o design (CSS)
 
+## Design Frontend — Diretrizes
+
+Antes de codar qualquer componente ou página, definir:
+- **Propósito**: que problema resolve? quem usa?
+- **Tom estético**: escolha um extremo claro (minimalista brutal, maximalista, retrô-futurista, editorial, orgânico, etc.)
+- **Diferencial**: o que torna esse UI inesquecível?
+
+Ao implementar:
+- **Tipografia**: fontes únicas e com personalidade. NUNCA Inter, Roboto, Arial ou system fonts genéricas
+- **Cores**: CSS variables, cor dominante + acento forte. Nada de gradiente roxo em fundo branco
+- **Movimento**: animações com impacto real — page load com staggered reveals, hover states surpreendentes. CSS puro preferível
+- **Layout**: assimetria, sobreposição, elementos que quebram o grid, espaço negativo generoso OU densidade controlada
+- **Fundo/Textura**: profundidade e atmosfera — gradient mesh, noise texture, sombras dramáticas, grain overlay
+- Código production-grade, funcional e coeso
+- NUNCA layouts previsíveis nem estética genérica de IA
+
+## Preferências pessoais de design
+- Tipografia fina (font-weight 200–300), elegante e leve
+- Estética refinada, NÃO a vibe genérica de "vibe coding" (sem gradientes berrantes, sem cards com sombra pesada, sem bordas arredondadas exageradas)
+- Menos é mais — sofisticação discreta
+
 ## Observações técnicas
 
 - O robô roda em thread separada; o frontend faz polling a cada 2s no `/status/<id>`
