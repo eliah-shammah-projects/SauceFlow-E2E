@@ -1,5 +1,7 @@
 # SauceFlow E2E — E-Commerce Automation Hub
 
+**Repository:** https://github.com/eliah-shammah-projects/SauceFlow-E2E
+
 Automated end-to-end e-commerce flow using **Flask** (backend) + **Playwright** (browser robot) against the [SauceDemo](https://www.saucedemo.com) store.
 
 The user types a product name and a maximum price. A Playwright robot logs into SauceDemo, collects all products, filters by name and price, displays results in a table, and executes a full checkout. A screenshot of the order confirmation is saved at the end.
