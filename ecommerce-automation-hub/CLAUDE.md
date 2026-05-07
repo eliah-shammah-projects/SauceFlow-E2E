@@ -73,7 +73,18 @@ Acesse `http://127.0.0.1:5002` no browser.
 
 ## Pendências
 
-- **Fase 7:** escrever testes unitários (`tests/test_unit.py`) e E2E (`tests/test_e2e.py`) + README
+- **Fase 7:** escrever testes unitários (`tests/test_unit.py`) e E2E (`tests/test_e2e.py`) + README.md + ai_usage.md + readme_ai_bugs.md + test_output.md + screenshot de confirmação de compra
+
+### Critérios dos testes (requisito do avaliador)
+
+**Testes unitários — `tests/test_unit.py`:**
+- Normalização de preço do produto: garantir que `price` chega como `float` (não string) e com moeda correta
+- Política de seleção de produto: qual produto é escolhido dado um conjunto de resultados filtrados
+- Cálculo do carrinho: total de itens e valor (se o modelo Cart implementar isso)
+
+**Testes E2E — `tests/test_e2e.py`:**
+- Pelo menos uma run completa do fluxo: Pesquisa → Adicionar ao carrinho → Checkout → Success
+- O teste **deve obrigatoriamente** gerar um screenshot da tela de confirmação de compra
 - **Pós-fase 7:** traduzir toda a UI para inglês (templates + JS)
 - **Pós-fase 7:** melhorar o design (CSS)
 

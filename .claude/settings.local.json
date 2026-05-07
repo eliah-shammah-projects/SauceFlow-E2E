@@ -9,7 +9,11 @@
       "Bash(python -c \"from app import app; print\\('OK - app importado com sucesso'\\)\")",
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(python -m pytest tests/test_unit.py -v)",
+      "Bash(pip install *)",
+      "Bash(python -m pip install pytest -q)",
+      "Bash(python -m pytest tests/test_e2e.py -v)"
     ]
   }
 }
