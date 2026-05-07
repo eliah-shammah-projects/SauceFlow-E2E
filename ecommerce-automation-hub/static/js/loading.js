@@ -1,10 +1,10 @@
 const PHRASES = [
-  "Abrindo o navegador...",
-  "Fazendo login no site...",
-  "Navegando até o catálogo...",
-  "Coletando os produtos...",
-  "Aplicando filtros de preço...",
-  "Quase lá, organizando resultados...",
+  "Opening browser...",
+  "Logging into the store...",
+  "Navigating to the catalogue...",
+  "Collecting products...",
+  "Applying price filters...",
+  "Almost there, sorting results...",
 ];
 
 const POLL_INTERVAL_MS = 2000;
@@ -15,12 +15,11 @@ const phraseEl = document.getElementById("phrase");
 const params = new URLSearchParams(window.location.search);
 const requestId = params.get("id");
 
-// Se não há requestId na URL, volta para o início
 if (!requestId) {
   window.location.href = "/";
 } else {
 
-// ── Rotação de frases ──
+// ── Phrase rotation ──
 let phraseIndex = 0;
 phraseEl.textContent = PHRASES[0];
 
@@ -29,28 +28,26 @@ const phraseTimer = setInterval(() => {
   phraseEl.textContent = PHRASES[phraseIndex];
 }, PHRASE_INTERVAL_MS);
 
-// ── Polling do status ──
+// ── Status polling ──
 const startTime = Date.now();
 
 const pollTimer = setInterval(async () => {
-  // Timeout global de 60s
   if (Date.now() - startTime > TIMEOUT_MS) {
     clearInterval(pollTimer);
     clearInterval(phraseTimer);
     window.location.href =
-      "/?erro=" + encodeURIComponent("A busca demorou demais. Tente novamente.");
+      "/?error=" + encodeURIComponent("Search timed out. Please try again.");
     return;
   }
 
   try {
     const response = await fetch("/status/" + encodeURIComponent(requestId));
 
-    // Se o job não foi encontrado (servidor reiniciado), volta ao início
     if (response.status === 404) {
       clearInterval(pollTimer);
       clearInterval(phraseTimer);
       window.location.href =
-        "/?erro=" + encodeURIComponent("Sessão expirada. Por favor, faça uma nova busca.");
+        "/?error=" + encodeURIComponent("Session expired. Please start a new search.");
       return;
     }
 
@@ -63,14 +60,12 @@ const pollTimer = setInterval(async () => {
     } else if (data.status === "error") {
       clearInterval(pollTimer);
       clearInterval(phraseTimer);
-      const msg = data.error || "Erro durante a busca.";
-      window.location.href = "/?erro=" + encodeURIComponent(msg);
+      const msg = data.error || "An error occurred during the search.";
+      window.location.href = "/?error=" + encodeURIComponent(msg);
     }
-    // Se "running", não faz nada — próximo tick do intervalo irá verificar novamente
   } catch (err) {
-    // Erro de rede — não interrompe, tenta no próximo tick
-    console.error("Erro ao verificar status:", err);
+    console.error("Error checking status:", err);
   }
 }, POLL_INTERVAL_MS);
 
-} // fim do else
+} // end else

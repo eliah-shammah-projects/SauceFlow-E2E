@@ -1,44 +1,44 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SauceFlow — Buscar Produto</title>
+  <title>SauceFlow — Search Product</title>
   <link rel="stylesheet" href="/static/css/style.css" />
 </head>
 <body>
   <div class="container">
-    <h1>Buscar Produto</h1>
+    <h1>Search Product</h1>
 
     <div id="error-box" class="error-msg" style="display:none;"></div>
 
     <form id="search-form">
       <div class="form-group">
-        <label for="item">Nome do produto</label>
+        <label for="item">Product name</label>
         <input
           type="text"
           id="item"
           name="item"
-          placeholder="ex: sauce labs backpack"
+          placeholder="e.g.: sauce labs backpack"
           required
           autocomplete="off"
         />
       </div>
 
       <div class="form-group">
-        <label for="preco_max">Preço máximo (USD)</label>
+        <label for="max_price">Maximum price (USD)</label>
         <input
           type="number"
-          id="preco_max"
-          name="preco_max"
-          placeholder="ex: 30"
+          id="max_price"
+          name="max_price"
+          placeholder="e.g.: 30"
           min="0.01"
           step="0.01"
           required
         />
       </div>
 
-      <button type="submit" class="btn" id="submit-btn">Buscar</button>
+      <button type="submit" class="btn" id="submit-btn">Search</button>
     </form>
   </div>
 
@@ -47,11 +47,10 @@
     const submitBtn = document.getElementById("submit-btn");
     const errorBox = document.getElementById("error-box");
 
-    // Exibe erro vindo de redirecionamento (ex: ?erro=mensagem)
     const params = new URLSearchParams(window.location.search);
-    const erroParam = params.get("erro");
-    if (erroParam) {
-      errorBox.textContent = erroParam;
+    const errorParam = params.get("error");
+    if (errorParam) {
+      errorBox.textContent = errorParam;
       errorBox.style.display = "block";
     }
 
@@ -60,34 +59,34 @@
       errorBox.style.display = "none";
 
       const item = document.getElementById("item").value.trim();
-      const preco_max = parseFloat(document.getElementById("preco_max").value);
+      const max_price = parseFloat(document.getElementById("max_price").value);
 
       if (!item) {
-        errorBox.textContent = "Por favor, informe o nome do produto.";
+        errorBox.textContent = "Please enter a product name.";
         errorBox.style.display = "block";
         return;
       }
 
-      if (isNaN(preco_max) || preco_max <= 0) {
-        errorBox.textContent = "Por favor, informe um preço máximo válido.";
+      if (isNaN(max_price) || max_price <= 0) {
+        errorBox.textContent = "Please enter a valid maximum price.";
         errorBox.style.display = "block";
         return;
       }
 
       submitBtn.disabled = true;
-      submitBtn.textContent = "Buscando...";
+      submitBtn.textContent = "Searching...";
 
       try {
         const response = await fetch("/run-search", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ item, preco_max }),
+          body: JSON.stringify({ item, max_price }),
         });
 
         const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data.error || "Erro ao iniciar a busca.");
+          throw new Error(data.error || "Failed to start the search.");
         }
 
         window.location.href = "/loading?id=" + encodeURIComponent(data.requestId);
@@ -95,7 +94,7 @@
         errorBox.textContent = err.message;
         errorBox.style.display = "block";
         submitBtn.disabled = false;
-        submitBtn.textContent = "Buscar";
+        submitBtn.textContent = "Search";
       }
     });
   </script>

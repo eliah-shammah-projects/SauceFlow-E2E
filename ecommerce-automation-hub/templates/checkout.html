@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SauceFlow — Confirmação</title>
+  <title>SauceFlow — Order Confirmation</title>
   <link rel="stylesheet" href="/static/css/style.css" />
 </head>
 <body>
@@ -15,37 +15,35 @@
     const resultBox = document.getElementById("result-box");
     const raw = sessionStorage.getItem("orderResult");
 
-    // Se não há resultado salvo, volta ao início
     if (!raw) {
       window.location.href = "/";
     } else {
       const order = JSON.parse(raw);
 
-      // Limpa o sessionStorage para não exibir resultado antigo numa próxima visita
       sessionStorage.removeItem("orderResult");
 
       if (order.status === "success") {
         const screenshotHtml = order.screenshot_path
-          ? `<img src="/${order.screenshot_path}" alt="Confirmação da compra" />`
+          ? `<img src="/${order.screenshot_path}" alt="Order confirmation" />`
           : "";
 
         resultBox.innerHTML = `
           <div class="checkout-result success">
-            <h1>Compra realizada!</h1>
-            <p>Total pago: <strong>$${parseFloat(order.total).toFixed(2)}</strong></p>
-            <p>O robô finalizou o pedido com sucesso no SauceDemo.</p>
+            <h1>Order placed!</h1>
+            <p>Total paid: <strong>$${parseFloat(order.total).toFixed(2)}</strong></p>
+            <p>The robot successfully completed the order on SauceDemo.</p>
             ${screenshotHtml}
             <br/>
-            <a href="/" class="link-back">← Fazer nova busca</a>
+            <a href="/" class="link-back">← New search</a>
           </div>`;
       } else {
-        const errorMsg = order.error || "Erro desconhecido durante o checkout.";
+        const errorMsg = order.error || "Unknown error during checkout.";
 
         resultBox.innerHTML = `
           <div class="checkout-result error">
-            <h1>Falha na compra</h1>
+            <h1>Order failed</h1>
             <p>${errorMsg}</p>
-            <a href="/" class="link-back">← Tentar novamente</a>
+            <a href="/" class="link-back">← Try again</a>
           </div>`;
       }
     }
