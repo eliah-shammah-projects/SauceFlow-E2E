@@ -25,6 +25,8 @@ The project was built in phases. The developer did not simply prompt the AI to "
 
 ## Real Prompts Used
 
+> **Note:** The original prompts were written in Portuguese. The excerpts below are free translations into English.
+
 **Prompt 1 — Project onboarding:**
 > "Hi, I have the following project (I won't paste it here). Before anything, read it and understand it well, then we'll talk to align on exactly what needs to be done."
 
