@@ -37,7 +37,9 @@ class _JsonFormatter(logging.Formatter):
 
 handler = logging.StreamHandler()
 handler.setFormatter(_JsonFormatter())
-logging.basicConfig(level=logging.INFO, handlers=[handler])
+root_logger = logging.getLogger()
+root_logger.setLevel(logging.INFO)
+root_logger.handlers = [handler]
 
 
 @app.route("/")
