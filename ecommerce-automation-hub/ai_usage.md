@@ -67,10 +67,10 @@ Claude suggested port `5000` (Flask default) for running the app. The developer 
 
 ## Keeping Credentials and Tokens Safe
 
-All sensitive data (SauceDemo username, password, checkout details) is stored in a `.env` file that is never committed to version control.
+SauceDemo credentials are stored in a `.env` file that is never committed to version control. Shipping details (name, postal code) are entered by the user at checkout time — no sensitive data is hardcoded.
 
 **How it was implemented:**
-- `.env` holds `SAUCE_USERNAME`, `SAUCE_PASSWORD`, `CHECKOUT_FIRST_NAME`, `CHECKOUT_LAST_NAME`, `CHECKOUT_POSTAL_CODE`
+- `.env` holds only `SAUCE_USERNAME` and `SAUCE_PASSWORD`
 - `.gitignore` explicitly excludes `.env` from git tracking
 - Code reads credentials via `os.getenv()` — no hardcoded secrets anywhere in the codebase
 
