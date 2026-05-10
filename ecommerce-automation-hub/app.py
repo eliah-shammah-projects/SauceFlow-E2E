@@ -1,5 +1,6 @@
 import json
 import logging
+import sys
 from datetime import datetime, timezone
 from flask import Flask, render_template
 from dotenv import load_dotenv
@@ -35,11 +36,12 @@ class _JsonFormatter(logging.Formatter):
             return super().format(record)
 
 
-handler = logging.StreamHandler()
-handler.setFormatter(_JsonFormatter())
-root_logger = logging.getLogger()
-root_logger.setLevel(logging.INFO)
-root_logger.handlers = [handler]
+def _setup_logging():
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setFormatter(_JsonFormatter())
+    root = logging.getLogger()
+    root.setLevel(logging.INFO)
+    root.handlers = [handler]
 
 
 @app.route("/")
@@ -68,4 +70,5 @@ def checkout_status():
 
 
 if __name__ == "__main__":
+    _setup_logging()
     app.run(debug=False, threaded=True, port=5002)
