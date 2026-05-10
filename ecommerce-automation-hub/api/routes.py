@@ -77,13 +77,17 @@ def run_search():
     request_id = str(uuid.uuid4())
 
     with _lock:
-        _jobs[request_id] = {"status": "running", "results": None, "error": None}
+        _jobs[request_id] = {"status": "running", "results": None, "error": None, "steps": []}
+
+    def log_step(msg: str) -> None:
+        with _lock:
+            _jobs[request_id]["steps"].append(msg)
 
     def _run():
         _log(request_id, "search_start", {"item": item, "max_price": max_price})
         start = time.time()
         try:
-            products = search_products(item, max_price)
+            products = search_products(item, max_price, log_step=log_step)
             results = [_product_to_dict(p) for p in products]
             with _lock:
                 _jobs[request_id]["status"] = "done"
@@ -122,6 +126,7 @@ def status(request_id):
         "status": snapshot["status"],
         "results": snapshot["results"],
         "error": snapshot["error"],
+        "steps": snapshot.get("steps", []),
     })
 
 

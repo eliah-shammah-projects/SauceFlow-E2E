@@ -15,7 +15,7 @@ def test_full_flow_search_checkout_screenshot(credentials):
     assert product.currency == "USD"
 
     # 3. Checkout
-    order = purchase_product(product)
+    order = purchase_product(product, "John", "Doe", "12345")
 
     # 4. Success
     assert order.success is True, f"Checkout falhou: {order.error}"

@@ -1,17 +1,7 @@
-const PHRASES = [
-  "Opening browser...",
-  "Logging into the store...",
-  "Navigating to the catalogue...",
-  "Collecting products...",
-  "Applying price filters...",
-  "Almost there, sorting results...",
-];
-
 const POLL_INTERVAL_MS = 2000;
-const PHRASE_INTERVAL_MS = 3000;
 const TIMEOUT_MS = 60000;
 
-const phraseEl = document.getElementById("phrase");
+const stepsEl = document.getElementById("steps");
 const params = new URLSearchParams(window.location.search);
 const requestId = params.get("id");
 
@@ -19,22 +9,25 @@ if (!requestId) {
   window.location.href = "/";
 } else {
 
-// ── Phrase rotation ──
-let phraseIndex = 0;
-phraseEl.textContent = PHRASES[0];
+let renderedCount = 0;
 
-const phraseTimer = setInterval(() => {
-  phraseIndex = (phraseIndex + 1) % PHRASES.length;
-  phraseEl.textContent = PHRASES[phraseIndex];
-}, PHRASE_INTERVAL_MS);
+function renderSteps(steps) {
+  if (!steps || steps.length === 0) return;
+  for (let i = renderedCount; i < steps.length; i++) {
+    const li = document.createElement("li");
+    li.className = "trace-step trace-step--new";
+    li.textContent = "✓ " + steps[i];
+    stepsEl.appendChild(li);
+    setTimeout(() => li.classList.remove("trace-step--new"), 50);
+  }
+  renderedCount = steps.length;
+}
 
-// ── Status polling ──
 const startTime = Date.now();
 
 const pollTimer = setInterval(async () => {
   if (Date.now() - startTime > TIMEOUT_MS) {
     clearInterval(pollTimer);
-    clearInterval(phraseTimer);
     window.location.href =
       "/?error=" + encodeURIComponent("Search timed out. Please try again.");
     return;
@@ -45,7 +38,6 @@ const pollTimer = setInterval(async () => {
 
     if (response.status === 404) {
       clearInterval(pollTimer);
-      clearInterval(phraseTimer);
       window.location.href =
         "/?error=" + encodeURIComponent("Session expired. Please start a new search.");
       return;
@@ -53,13 +45,15 @@ const pollTimer = setInterval(async () => {
 
     const data = await response.json();
 
+    renderSteps(data.steps);
+
     if (data.status === "done") {
       clearInterval(pollTimer);
-      clearInterval(phraseTimer);
-      window.location.href = "/resultados?id=" + encodeURIComponent(requestId);
+      setTimeout(() => {
+        window.location.href = "/resultados?id=" + encodeURIComponent(requestId);
+      }, 1500);
     } else if (data.status === "error") {
       clearInterval(pollTimer);
-      clearInterval(phraseTimer);
       const msg = data.error || "An error occurred during the search.";
       window.location.href = "/?error=" + encodeURIComponent(msg);
     }
