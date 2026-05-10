@@ -55,6 +55,11 @@ def resultados():
     return render_template("resultados.html")
 
 
+@app.route("/cart")
+def cart():
+    return render_template("cart.html")
+
+
 @app.route("/checkout-status")
 def checkout_status():
     return render_template("checkout.html")

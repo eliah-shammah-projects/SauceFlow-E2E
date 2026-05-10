@@ -137,9 +137,15 @@ def run_checkout():
 
     request_id = data.get("requestId", "").strip()
     product_dict = data.get("product")
+    first_name = (data.get("firstName") or "").strip()
+    last_name = (data.get("lastName") or "").strip()
+    postal_code = (data.get("postalCode") or "").strip()
 
     if not request_id or not product_dict:
         return jsonify({"error": "'requestId' and 'product' are required."}), 400
+
+    if not first_name or not last_name or not postal_code:
+        return jsonify({"error": "Shipping details are required."}), 400
 
     with _lock:
         job = _jobs.get(request_id)
@@ -157,7 +163,7 @@ def run_checkout():
 
     _log(request_id, "checkout_start", {"product": product.title, "price": product.price})
     start = time.time()
-    order = purchase_product(product)
+    order = purchase_product(product, first_name, last_name, postal_code)
     duration = round(time.time() - start, 2)
 
     if order.success:

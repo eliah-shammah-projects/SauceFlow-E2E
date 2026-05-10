@@ -1,0 +1,8 @@
+STUDY.md
+ENUNCIADO.md
+.env
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+ecommerce-automation-hub/static/screenshots/

@@ -11,7 +11,7 @@ _SCREENSHOTS_DIR = os.path.join(
 )
 
 
-def purchase_product(product: Product) -> Order:
+def purchase_product(product: Product, first_name: str, last_name: str, postal_code: str) -> Order:
     browser, page = open_browser()
     screenshot_path = None
     try:
@@ -30,9 +30,9 @@ def purchase_product(product: Product) -> Order:
         click(page, sel.CART_ICON)
         click(page, sel.CHECKOUT_BUTTON)
 
-        fill(page, sel.FIRST_NAME_INPUT, os.getenv("CHECKOUT_FIRST_NAME", "John"))
-        fill(page, sel.LAST_NAME_INPUT, os.getenv("CHECKOUT_LAST_NAME", "Doe"))
-        fill(page, sel.POSTAL_CODE_INPUT, os.getenv("CHECKOUT_POSTAL_CODE", "12345"))
+        fill(page, sel.FIRST_NAME_INPUT, first_name)
+        fill(page, sel.LAST_NAME_INPUT, last_name)
+        fill(page, sel.POSTAL_CODE_INPUT, postal_code)
         click(page, sel.CONTINUE_BUTTON)
         click(page, sel.FINISH_BUTTON)
 

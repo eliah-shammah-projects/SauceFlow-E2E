@@ -27,10 +27,15 @@
           ? `<img src="/${order.screenshot_path}" alt="Order confirmation" />`
           : "";
 
+        const shippingHtml = order.firstName
+          ? `<p>Delivered to: <strong>${order.firstName} ${order.lastName}</strong> · ${order.postalCode}</p>`
+          : "";
+
         resultBox.innerHTML = `
           <div class="checkout-result success">
             <h1>Order placed!</h1>
             <p>Total paid: <strong>$${parseFloat(order.total).toFixed(2)}</strong></p>
+            ${shippingHtml}
             <p>The robot successfully completed the order on SauceDemo.</p>
             ${screenshotHtml}
             <br/>
